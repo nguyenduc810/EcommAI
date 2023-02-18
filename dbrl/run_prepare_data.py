@@ -32,11 +32,11 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     start_time = time.perf_counter()
 
-    user_feat = pd.read_csv("resources/user.csv", header=None,
+    user_feat = pd.read_csv("/kaggle/input/ecommai-euir-round2-train/ECommAI_EUIR_round2_train_20190816/user.csv", header=None,
                             names=["user", "sex", "age", "pur_power"])
-    item_feat = pd.read_csv("resources/item.csv", header=None,
+    item_feat = pd.read_csv("/kaggle/input/ecommai-euir-round2-train/ECommAI_EUIR_round2_train_20190816/item.csv", header=None,
                             names=["item", "category", "shop", "brand"])
-    behavior = pd.read_csv("resources/user_behavior.csv", header=None,
+    behavior = pd.read_csv("/kaggle/input/ecommai-euir-round2-train/ECommAI_EUIR_round2_train_20190816/user_behavior.csv", header=None,
                            names=["user", "item", "behavior", "time"])
 
     behavior = behavior.sort_values(by="time").reset_index(drop=True)
@@ -70,6 +70,6 @@ if __name__ == "__main__":
     behavior = behavior.merge(item_feat, on="item")
     behavior["age"] = behavior["age"].apply(bucket_age)
     behavior = behavior.sort_values(by="time").reset_index(drop=True)
-    behavior.to_csv("resources/tianchi.csv", header=None, index=False)
+    behavior.to_csv("tianchi.csv", header=None, index=False)
     print(f"prepare data done!, "
           f"time elapsed: {(time.perf_counter() - start_time):.2f}")

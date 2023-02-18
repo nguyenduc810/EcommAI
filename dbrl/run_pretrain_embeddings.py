@@ -41,8 +41,9 @@ if __name__ == "__main__":
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
-    PATH = os.path.join("resources", args.data)
-    EMBEDDING_PATH = "resources/"
+    #PATH = os.path.join("resources", args.data)
+    #EMBEDDING_PATH = "resources/"
+    PATH = "/kaggle/working/"
     static_feat = ["sex", "age", "pur_power"]
     dynamic_feat = ["category", "shop", "brand"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     )
     print(f"n_users: {n_users}, n_items: {n_items}, "
           f"train_shape: {train_data.shape}, eval_shape: {eval_data.shape}")
-    print("train data:")
+    #print("train data:")
     #print(train_data.head())
 
     train_user, train_item, train_label = sample_items_random(
@@ -137,8 +138,8 @@ if __name__ == "__main__":
     print(f"user_embeds shape: {user_embeddings.shape},"
           f" item_embeds shape: {item_embeddings.shape}")
 
-    save_npy(user_embeddings, item_embeddings, EMBEDDING_PATH)
+    save_npy(user_embeddings, item_embeddings, PATH)
     save_json(
-        user_map, item_map, user_embeddings, item_embeddings, EMBEDDING_PATH
+        user_map, item_map, user_embeddings, item_embeddings, PATH
     )
     print("pretrain embeddings done!")
