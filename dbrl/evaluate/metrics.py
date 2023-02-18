@@ -1,6 +1,6 @@
 import numpy as np
 
-
+# xem lại và chỉnh sửa.
 def ndcg_at_k(y_true_list, y_reco_list, users=None, k=10, next_item=False,
               all_item=False):
     if next_item:

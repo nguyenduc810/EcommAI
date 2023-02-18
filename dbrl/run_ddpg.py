@@ -107,12 +107,12 @@ if __name__ == "__main__":
         test_rewards=test_rewards,
         reward_shape=reward_map
     )
-    # res = next(iter(train_loader))
-    # print(f"user_size {res['user'].shape}")
-    # print(f"item_size {res['item'].shape}")
-    # print(f"action_size {res['action'].shape}")
-    # print(f'user_{0} size: {res[0]["user"].shape}')
-    # print(f'item_{0}: {res[0]["item"].shape}')
+    res = next(iter(train_loader))
+    print(f"user_size {res['user'].shape}")
+    print(f"item_size {res['item'].shape}")
+    print(f"action_size {res['action'].shape}")
+    print(f'user_{0} size: {res[0]["user"].shape}')
+    print(f'item_{0}: {res[0]["item"].shape}')
 
     actor = Actor(
         input_dim, action_dim, hidden_size, user_embeddings, item_embeddings,

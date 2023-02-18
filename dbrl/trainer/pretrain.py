@@ -31,6 +31,12 @@ def pretrain_model(
             # torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
             optimizer.step()
             train_loss.append(loss.item())
+        torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': loss}
+        , './weights/model_dssm.pt')
 
         with torch.no_grad():
             model.eval()

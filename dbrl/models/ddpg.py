@@ -87,7 +87,7 @@ class DDPG(nn.Module):
 
     def _compute_actor_loss(self, data):
         state, action = self.actor(data)
-        actor_loss = -self.critic(state, action).mean()
+        actor_loss = -self.critic(state, action).mean()   # nhân thêm log, tìm hiểu thêm về actor, critic
         return actor_loss, action
 
     def _compute_critic_loss(self, data):

@@ -17,7 +17,7 @@ def batch_eval(
         if model_name in ("bcq", "ddpg"):
             action = info["action"].detach()
             action = action / torch.norm(action, dim=1, keepdim=True)
-            scores = torch.matmul(action, item_embeds.T)  # 1x32 mul 32xn_embdding
+            scores = torch.matmul(action, item_embeds.T)  
             # B * n_rec
             _, rec_idxs = torch.topk(scores, n_rec, dim=1, sorted=False)
         elif model_name == "reinforce":

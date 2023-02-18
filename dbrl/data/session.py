@@ -111,7 +111,7 @@ def build_session(
         else:
             done[-1] = 1.
         done_sess.append(done)
-
+# sửa lại cho mỗi batch là 1 user
     res = {"user": np.concatenate(user_sess),
            "item": np.concatenate(item_sess, axis=0),
            "reward": np.concatenate(reward_sess),
