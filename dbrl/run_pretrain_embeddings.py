@@ -43,7 +43,7 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     #PATH = os.path.join("resources", args.data)
     #EMBEDDING_PATH = "resources/"
-    PATH = "/kaggle/working/"
+    PATH = "/kaggle/working/tianchi.csv"
     static_feat = ["sex", "age", "pur_power"]
     dynamic_feat = ["category", "shop", "brand"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
