@@ -1,7 +1,7 @@
 import os
 import sys
 sys.path.append(os.pardir)
-sys.path.insert(1,'/DBRL')
+sys.path.insert(1,'/kaggle/working/EcommAI')
 import warnings
 warnings.filterwarnings("ignore")
 import argparse
