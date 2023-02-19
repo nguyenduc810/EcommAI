@@ -15,7 +15,6 @@ def batch_eval(
         model=None
 ):
     with torch.no_grad():
-        rec_idxs = []
         if model_name in ("bcq", "ddpg"):
             action = info["action"].detach()
             action = action / torch.norm(action, dim=1, keepdim=True)
@@ -112,4 +111,3 @@ def last_eval(
     #    col_indices = torch.cat([torch.randperm(n_rec * 2)[:n_rec] for _ in range(batch_size)])
     #    row_indices = torch.arange(batch_size).repeat_interleave(n_rec)
     #    rec_idxs = rec[row_indices, col_indices].reshape(batch_size, -1)
-
