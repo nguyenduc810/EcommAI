@@ -15,6 +15,7 @@ def batch_eval(
         model=None
 ):
     with torch.no_grad():
+        rec_idxs = []
         if model_name in ("bcq", "ddpg"):
             action = info["action"].detach()
             action = action / torch.norm(action, dim=1, keepdim=True)
