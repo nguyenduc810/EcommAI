@@ -30,6 +30,7 @@ def parse_args():
     parser.add_argument("--neg_item", type=int, default=1)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--hidden_size", type=list, default=(256,128))
+    parser.add_argument("--pretrain", type= bool, default=True)
     return parser.parse_args()
 
 
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     item_embed_size = args.embed_size
     feat_embed_size = args.embed_size
     hidden_size = args.hidden_size
+    pretrain = args.pretrain
     criterion = (
         nn.CosineEmbeddingLoss()
         if args.loss == "cosine"
@@ -127,7 +129,12 @@ if __name__ == "__main__":
         dynamic_feat,
         use_bn=True
     ).to(device)
-    init_param_dssm(model)
+    if pretrain:
+        checkpoint = torch.load('model_dssm.pt')
+        model.load_state_dict(checkpoint['model_state_dict'])
+        print('Load pretrain successful')
+    else:
+      init_param_dssm(model)
     optimizer = Adam(model.parameters(), lr=lr)  # weight_decay
 
     pretrain_model(model, train_loader, eval_loader, n_epochs, criterion,
