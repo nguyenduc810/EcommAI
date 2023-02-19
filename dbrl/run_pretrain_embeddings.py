@@ -129,6 +129,7 @@ if __name__ == "__main__":
         dynamic_feat,
         use_bn=True
     ).to(device)
+    print(pretrain)
     if pretrain:
         checkpoint = torch.load('model_dssm.pt')
         model.load_state_dict(checkpoint['model_state_dict'])
