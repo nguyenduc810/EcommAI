@@ -50,10 +50,16 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    PATH = os.path.join("resources", args.data)
-    with open(os.path.join("resources", args.user_embeds), "rb") as f:
+    # PATH = os.path.join("resources", args.data)
+    # with open(os.path.join("resources", args.user_embeds), "rb") as f:
+    #     user_embeddings = np.load(f)
+    # with open(os.path.join("resources", args.item_embeds), "rb") as f:
+    #     item_embeddings = np.load(f)
+    # item_embeddings[-1] = 0.   # last item is used for padding
+    PATH = args.data
+    with open(args.user_embeds, "rb") as f:
         user_embeddings = np.load(f)
-    with open(os.path.join("resources", args.item_embeds), "rb") as f:
+    with open(args.item_embeds, "rb") as f:
         item_embeddings = np.load(f)
     item_embeddings[-1] = 0.   # last item is used for padding
 
