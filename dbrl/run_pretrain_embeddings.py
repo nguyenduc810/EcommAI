@@ -138,8 +138,8 @@ if __name__ == "__main__":
     print(f"user_embeds shape: {user_embeddings.shape},"
           f" item_embeds shape: {item_embeddings.shape}")
 
-    save_npy(user_embeddings, item_embeddings, PATH)
+    save_npy(user_embeddings, item_embeddings, "/kaggle/working/")
     save_json(
-        user_map, item_map, user_embeddings, item_embeddings, PATH
+        user_map, item_map, user_embeddings, item_embeddings, "/kaggle/working/"
     )
     print("pretrain embeddings done!")
