@@ -57,11 +57,11 @@ class DSSM(nn.Module):
         out_user = self.fcu1(user_part)
         if self.use_bn:
             out_user = self.bnu1(out_user)
-        out_user = F.relu(out_user)
+        out_user = F.leaky_relu(out_user)
         out_user = self.fcu2(out_user)
         if self.use_bn:
             out_user = self.bnu2(out_user)
-        out_user = F.relu(out_user)
+        out_user = F.leaky_relu(out_user)
         out_user = self.fcu3(out_user)
         out_user = out_user / torch.norm(out_user, dim=1, keepdim=True)
 
@@ -74,11 +74,11 @@ class DSSM(nn.Module):
         out_item = self.fci1(item_part)
         if self.use_bn:
             out_item = self.bni1(out_item)
-        out_item = F.relu(out_item)
+        out_item = F.leaky_relu(out_item)
         out_item = self.fci2(out_item)
         if self.use_bn:
             out_item = self.bni2(out_item)
-        out_item = F.relu(out_item)
+        out_item = F.leaky_relu(out_item)
         out_item = self.fci3(out_item)
         out_item = out_item / torch.norm(out_item, dim=1, keepdim=True)
         return out_user, out_item
