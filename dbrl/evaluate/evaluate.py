@@ -7,6 +7,7 @@ def batch_eval(
         info,
         n_rec,
         target_items,
+        reward_items,
         user_consumed,
         users,
         item_embeds=None,
@@ -17,21 +18,28 @@ def batch_eval(
         if model_name in ("bcq", "ddpg"):
             action = info["action"].detach()
             action = action / torch.norm(action, dim=1, keepdim=True)
-            scores = torch.matmul(action, item_embeds.T)  
+            scores = torch.matmul(action, item_embeds.T)
+            #print("action_shape:{}".format(action.shape))
+            #print("scores_shape: {}".format(scores.shape))
             # B * n_rec
             _, rec_idxs = torch.topk(scores, n_rec, dim=1, sorted=False)
+            #print("rec_idx_shape: {}".format(rec_idxs.shape))
         elif model_name == "reinforce":
             action_probs = model.get_log_probs(action=info["action"])
             _, rec_idxs = torch.topk(action_probs, n_rec, dim=1, sorted=False)
 
         isins = (target_items[..., None] == rec_idxs).any(dim=1)
-        rewards = isins.sum().tolist()
+        #print("reward_items: {}".format(reward_items))
+        #print("target_item: {}".format(target_items[..., None]))
+        #print("isins_shape: {}".format(isins.shape))
+        #print("isins: {}".format(isins))
+        #print("isins_sum: {}".format(isins.sum()))
+        rewards = reward_items[isins].sum().tolist()
+        #print("rewards_shape: {}".format(rewards.shape))
 
         rec_idxs = rec_idxs.cpu().numpy()
-        ndcg_next_item = ndcg_at_k(target_items.cpu().numpy(), rec_idxs,
-                                   next_item=True)
-        ndcg_all_item = ndcg_at_k(user_consumed, rec_idxs, users.cpu().numpy(),
-                                  n_rec, all_item=True)
+        ndcg_next_item = ndcg_at_k(target_items.cpu().numpy(), rec_idxs, reward_items.cpu().numpy(),next_item=True)
+        ndcg_all_item = ndcg_at_k(user_consumed, rec_idxs,rewards = None,users= users.cpu().numpy(),k= n_rec, all_item=True)
         res = {"rewards": rewards,
                "ndcg_next_item": ndcg_next_item,
                "ndcg_all_item": ndcg_all_item}
@@ -90,7 +98,7 @@ def last_eval(
     # print(f"{mode} recommendations: "
     #      f"\n{rec_idxs[[0, 17, 100, 684, 1000, 1584, 3000]]}")
     true_items = train_user_consumed if mode == "train" else test_user_consumed
-    return ndcg_at_k(true_items, rec_idxs.numpy(), range(n_users), n_rec)
+    return ndcg_at_k(true_items, rec_idxs.numpy(),rewards = None, users= range(n_users), k=n_rec)
 
 
     #    action = action.unsqueeze(1)
@@ -103,5 +111,4 @@ def last_eval(
     #    col_indices = torch.cat([torch.randperm(n_rec * 2)[:n_rec] for _ in range(batch_size)])
     #    row_indices = torch.arange(batch_size).repeat_interleave(n_rec)
     #    rec_idxs = rec[row_indices, col_indices].reshape(batch_size, -1)
-
 
