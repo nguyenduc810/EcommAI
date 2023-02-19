@@ -60,6 +60,7 @@ class Actor(nn.Module):
         self.fc1 = nn.Linear(input_dim, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
         self.fc3 = nn.Linear(hidden_size, action_dim)
+        #self.ln1 = nn.LayerNorm(hidden_size, elementwise_affine = False)
         self.pad_val = pad_val
         self.device = device
 
@@ -110,11 +111,12 @@ class Critic(nn.Module):
         self.fc1 = nn.Linear(input_dim + action_dim, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
         self.fc3 = nn.Linear(hidden_size, 1)
+        self.ln1 = nn.LayerNorm(hidden_size, elementwise_affine = False)
 
     def forward(self, state, action):
         out = torch.cat([state, action], dim=1)
-        out = F.relu(self.fc1(out))
-        out = F.relu(self.fc2(out))
+        out = F.relu(self.ln1(self.fc1(out)))
+        out = F.relu(self.ln1(self.fc2(out)))
         out = self.fc3(out)
         return out.squeeze()
 
@@ -152,6 +154,7 @@ class PolicyPi(Actor):
     def get_action(self, state, tanh=False):
         action = F.relu(self.pfc1(state))
         action = F.relu(self.pfc2(action))
+        action = self.softmax_fc(action)
         if tanh:
             action = F.tanh(action)
         return action
@@ -163,8 +166,8 @@ class PolicyPi(Actor):
 
     def get_log_probs(self, data):
         state, action = self.forward(data)
-        logits = self.softmax_fc(action)
-        log_prob = F.log_softmax(logits, dim=1)
+        #logits = self.softmax_fc(action)
+        log_prob = F.log_softmax(action, dim=1)
         return state, log_prob, action
 
     def get_beta_state(self, data):
@@ -296,4 +299,3 @@ class Perturbator(nn.Module):
         if self.action_range is not None:
             act = act.clamp(self.action_range[0], self.action_range[1])
         return act
-

@@ -82,7 +82,7 @@ if __name__ == "__main__":
     sess_mode = args.sess_mode
     neg_sample = None
     one_hour = int(60 * 60)
-    reward_map = {"pv": 1., "cart": 2., "fav": 2., "buy": 3.}
+    reward_map = {"pv": 1., "cart": 2., "fav": 4., "buy":5.}
     columns = ["user", "item", "label", "time", "sex", "age", "pur_power",
                "category", "shop", "brand"]
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         test_rewards=test_rewards,
         reward_shape=reward_map
     )
-    res = next(iter(train_loader))
+    # res = next(iter(train_loader))
     # print(f"user_size {res['user'].shape}")
     # print(f"item_size {res['item'].shape}")
     # print(f"action_size {res['action'].shape}")
