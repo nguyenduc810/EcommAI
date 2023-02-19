@@ -30,7 +30,7 @@ def parse_args():
     parser.add_argument("--neg_item", type=int, default=1)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--hidden_size", type=list, default=(256,128))
-    parser.add_argument("--pretrain", type= bool, default=True)
+    parser.add_argument("--pretrain", type= int, default=1)
     return parser.parse_args()
 
 
@@ -129,8 +129,7 @@ if __name__ == "__main__":
         dynamic_feat,
         use_bn=True
     ).to(device)
-    print(pretrain)
-    if pretrain:
+    if pretrain == 1:
         checkpoint = torch.load('model_dssm.pt')
         model.load_state_dict(checkpoint['model_state_dict'])
         print('Load pretrain successful')
