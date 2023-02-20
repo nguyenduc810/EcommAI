@@ -32,7 +32,7 @@ def parse_args():
     parser.add_argument("--hidden_size_1", type=int, default=400)
     parser.add_argument("--hidden_size_2", type=int, default=300)
     parser.add_argument("--lr_actor", type=float, default=1e-5)
-    parser.add_argument("lr_critic", type=float, default=1e-5)
+    parser.add_argument("--lr_critic", type=float, default=1e-5)
     parser.add_argument("--weight_decay", type=float, default=0.)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--tau", type=float, default=0.001)
