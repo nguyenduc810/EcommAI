@@ -33,7 +33,8 @@ class Actor(nn.Module):
             self,
             input_dim,
             action_dim,
-            hidden_size,
+            hidden_size_1,
+            hidden_size_2,
             user_embeds,
             item_embeds,
             attention=None,
@@ -57,9 +58,9 @@ class Actor(nn.Module):
             self.attention = None
 
     #    self.dropout = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(input_dim, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, action_dim)
+        self.fc1 = nn.Linear(input_dim, hidden_size_1)
+        self.fc2 = nn.Linear(hidden_size_1, hidden_size_2)
+        self.fc3 = nn.Linear(hidden_size_2, action_dim)
         #self.ln1 = nn.LayerNorm(hidden_size, elementwise_affine = False)
         self.pad_val = pad_val
         self.device = device
@@ -105,18 +106,20 @@ class Critic(nn.Module):
             self,
             input_dim,
             action_dim,
-            hidden_size
+            hidden_size_1,
+            hidden_size_2
     ):
         super(Critic, self).__init__()
-        self.fc1 = nn.Linear(input_dim + action_dim, hidden_size)
-        self.fc2 = nn.Linear(hidden_size, hidden_size)
-        self.fc3 = nn.Linear(hidden_size, 1)
-        self.ln1 = nn.LayerNorm(hidden_size, elementwise_affine = False)
+        self.fc1 = nn.Linear(input_dim + action_dim, hidden_size_1)
+        self.fc2 = nn.Linear(hidden_size_1, hidden_size_2)
+        self.fc3 = nn.Linear(hidden_size_2, 1)
+        #self.ln1 = nn.LayerNorm(hidden_size_2, elementwise_affine = False)
 
     def forward(self, state, action):
         out = torch.cat([state, action], dim=1)
-        out = F.relu(self.ln1(self.fc1(out)))
-        out = F.relu(self.ln1(self.fc2(out)))
+        out = F.relu(self.fc1(out))
+        # out = F.relu(self.ln1(self.fc2(out)))
+        out = F.relu(self.fc2(out))
         out = self.fc3(out)
         return out.squeeze()
 

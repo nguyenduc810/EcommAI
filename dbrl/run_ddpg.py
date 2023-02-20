@@ -29,8 +29,10 @@ def parse_args():
     parser.add_argument("--n_rec", type=int, default=10,
                         help="num of items to recommend")
     parser.add_argument("--batch_size", type=int, default=2048)
-    parser.add_argument("--hidden_size", type=int, default=64)
-    parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--hidden_size_1", type=int, default=400)
+    parser.add_argument("--hidden_size_2", type=int, default=300)
+    parser.add_argument("--lr_actor", type=float, default=1e-5)
+    parser.add_argument("lr_critic", type=float, default=1e-5)
     parser.add_argument("--weight_decay", type=float, default=0.)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--tau", type=float, default=0.001)
@@ -67,11 +69,12 @@ if __name__ == "__main__":
     hist_num = args.hist_num
     batch_size = eval_batch_size = args.batch_size
     embed_size = item_embeddings.shape[1]
-    hidden_size = args.hidden_size
+    hidden_size_1 = args.hidden_size_1
+    hidden_size_2 = args.hidden_size_2
     input_dim = embed_size * (hist_num + 1)
     action_dim = embed_size
-    actor_lr = args.lr
-    critic_lr = args.lr
+    actor_lr = args.lr_actor
+    critic_lr = args.lr_critic
     weight_decay_actor = args.weight_decay
     weight_decay_critic = args.weight_decay
     gamma = args.gamma
@@ -122,10 +125,10 @@ if __name__ == "__main__":
     # print(f'item_{0}: {res[0]["item"].shape}')
 
     actor = Actor(
-        input_dim, action_dim, hidden_size, user_embeddings, item_embeddings,
+        input_dim, action_dim, hidden_size_1, hidden_size_2, user_embeddings, item_embeddings,
         None, pad_val, 1, device
     ).to(device)
-    critic = Critic(input_dim, action_dim, hidden_size).to(device)
+    critic = Critic(input_dim, action_dim, hidden_size_1, hidden_size_2).to(device)
     init_param(actor, critic)
 
     actor_optim = Adam(
@@ -169,5 +172,5 @@ if __name__ == "__main__":
         eval_interval=10
     )
 
-    torch.save(actor.state_dict(), "resources/model_ddpg.pt")
+    torch.save(actor.state_dict(), "model_ddpg.pt")
     print("train and save done!")
