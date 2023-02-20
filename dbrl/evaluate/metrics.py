@@ -9,10 +9,12 @@ def ndcg_at_k(y_true_list, y_reco_list, rewards, users=None, k=10, next_item=Fal
         y_reco_list = y_reco_list.tolist()
         for y_true, y_reco, r in zip(y_true_list, y_reco_list, rewards):
             if y_true in y_reco:
+                # index = y_reco.index(y_true)
+                # dcg = r / np.log2(index + 2)
+                # idcg = r /np.log2(0+2)
+                # ndcg = dcg/idcg
                 index = y_reco.index(y_true)
-                dcg = r / np.log2(index + 2)
-                idcg = r /np.log2(0+2)
-                ndcg = dcg/idcg
+                ndcg = r / np.log2(index + 2)
             else:
                 ndcg = 0.
             ndcg_all.append(ndcg)
