@@ -29,7 +29,8 @@ def parse_args():
                         help="cosine or bce loss")
     parser.add_argument("--neg_item", type=int, default=1)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--hidden_size", type=list, default=(256,128))
+    parser.add_argument("--hidden_size_1", type=int, default=512)
+    parser.add_argument("--hidden_size_2", type=int, default=512)
     parser.add_argument("--pretrain", type= int, default=1)
     return parser.parse_args()
 
@@ -53,7 +54,8 @@ if __name__ == "__main__":
     lr = args.lr
     item_embed_size = args.embed_size
     feat_embed_size = args.embed_size
-    hidden_size = args.hidden_size
+    hidden_size_1 = args.hidden_size_1
+    hidden_size_2 = args.hidden_size_2
     pretrain = args.pretrain
     criterion = (
         nn.CosineEmbeddingLoss()
@@ -123,7 +125,8 @@ if __name__ == "__main__":
         feat_embed_size,
         n_users,
         n_items,
-        hidden_size,
+        hidden_size_1,
+        hidden_size_2,
         feat_map,
         static_feat,
         dynamic_feat,

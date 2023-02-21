@@ -10,7 +10,8 @@ class DSSM(nn.Module):
             feat_embed_size,
             n_users,
             n_items,
-            hidden_size,
+            hidden_size_1,
+            hidden_size_2,
             feat_map,
             static_feat,
             dynamic_feat,
@@ -31,21 +32,21 @@ class DSSM(nn.Module):
         self.static_feat = static_feat
         self.dynamic_feat = dynamic_feat
         input_dim_user = main_embed_size + feat_embed_size * len(static_feat)
-        self.fcu1 = nn.Linear(input_dim_user, hidden_size[0])
-        self.fcu2 = nn.Linear(hidden_size[0], hidden_size[1])
-        self.fcu3 = nn.Linear(hidden_size[1], main_embed_size)
+        self.fcu1 = nn.Linear(input_dim_user, hidden_size_1)
+        self.fcu2 = nn.Linear(hidden_size_1, hidden_size_2)
+        self.fcu3 = nn.Linear(hidden_size_2, main_embed_size)
 
         input_dim_item = main_embed_size + feat_embed_size * len(dynamic_feat)
-        self.fci1 = nn.Linear(input_dim_item, hidden_size[0])
-        self.fci2 = nn.Linear(hidden_size[0], hidden_size[1])
-        self.fci3 = nn.Linear(hidden_size[1], main_embed_size)
+        self.fci1 = nn.Linear(input_dim_item, hidden_size_1)
+        self.fci2 = nn.Linear(hidden_size_1, hidden_size_2)
+        self.fci3 = nn.Linear(hidden_size_2, main_embed_size)
 
         self.use_bn = use_bn
         if use_bn:
-            self.bnu1 = nn.BatchNorm1d(hidden_size[0])
-            self.bnu2 = nn.BatchNorm1d(hidden_size[1])
-            self.bni1 = nn.BatchNorm1d(hidden_size[0])
-            self.bni2 = nn.BatchNorm1d(hidden_size[1])
+            self.bnu1 = nn.BatchNorm1d(hidden_size_1)
+            self.bnu2 = nn.BatchNorm1d(hidden_size_2)
+            self.bni1 = nn.BatchNorm1d(hidden_size_1)
+            self.bni2 = nn.BatchNorm1d(hidden_size_2)
 
     def get_embedding(self, data):
         user_part = [self.embed_user(data["user"])]
