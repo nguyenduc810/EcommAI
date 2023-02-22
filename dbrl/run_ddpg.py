@@ -33,7 +33,8 @@ def parse_args():
     parser.add_argument("--hidden_size_2", type=int, default=300)
     parser.add_argument("--lr_actor", type=float, default=1e-5)
     parser.add_argument("--lr_critic", type=float, default=1e-5)
-    parser.add_argument("--weight_decay", type=float, default=0.)
+    parser.add_argument("--weight_decay_critic", type=float, default=1e-2)
+    parser.add_argument("--weight_decay_actor", type=float, default=0.)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--tau", type=float, default=0.001)
     parser.add_argument("--policy_delay", type=int, default=1)
@@ -75,8 +76,8 @@ if __name__ == "__main__":
     action_dim = embed_size
     actor_lr = args.lr_actor
     critic_lr = args.lr_critic
-    weight_decay_actor = args.weight_decay
-    weight_decay_critic = args.weight_decay
+    weight_decay_actor = args.weight_decay_actor
+    weight_decay_critic = args.weight_decay_critic
     gamma = args.gamma
     tau = args.tau
     n_rec = args.n_rec
@@ -132,7 +133,7 @@ if __name__ == "__main__":
     init_param(actor, critic)
 
     actor_optim = Adam(
-        actor.parameters(), actor_lr, weight_decay=weight_decay_actor
+        actor.parameters(), actor_lr, #weight_decay=weight_decay_actor
     )
     critic_optim = Adam(
         critic.parameters(), critic_lr, weight_decay=weight_decay_critic

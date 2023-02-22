@@ -106,6 +106,7 @@ def train_model(
                 )
                 eval_collector.print_and_clear_info(train_flag= False, epoch=epoch)
         print("=" * 80)
+        torch.save(model.state_dict(), "model_full_ddpg.pt")
 
 
 

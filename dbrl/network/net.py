@@ -87,7 +87,7 @@ class Actor(nn.Module):
         state = torch.cat([user_repr, item_repr], dim=1)
         return state
 
-    def get_action(self, state, tanh=False):
+    def get_action(self, state, tanh=True):
         action = F.relu(self.fc1(state))
         action = F.relu(self.fc2(action))
         action = self.fc3(action)
