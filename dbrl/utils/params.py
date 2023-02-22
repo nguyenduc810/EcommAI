@@ -32,12 +32,13 @@ def init_param_bcq(generator, perturbator, critic1, critic2):
 def init_param(actor, other):
     for name, param in actor.named_parameters():
         if "bias" in name:
-            nn.init.zeros_(param)
+            # nn.init.zeros_(param)
+            nn.init.normal_(param, mean= -3*1e-3, std=-3*1e-3)
         elif "embeds" not in name:
             nn.init.xavier_uniform_(param)
     for name, param in other.named_parameters():
         if "bias" in name:
-            nn.init.zeros_(param)
+            nn.init.normal_(param, mean=3*1e-4, std=3*1e-4)
         else:
             nn.init.xavier_uniform_(param)
 
