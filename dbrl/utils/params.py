@@ -38,7 +38,7 @@ def init_param(actor, other):
             nn.init.xavier_uniform_(param)
     for name, param in other.named_parameters():
         if "bias" in name:
-            nn.init.normal_(param, mean=3*1e-4, std=3*1e-4)
+            nn.init.normal_(param, mean=0, std=3*1e-4)
         else:
             nn.init.xavier_uniform_(param)
 
