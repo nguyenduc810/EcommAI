@@ -57,7 +57,7 @@ if __name__ == "__main__":
         ].index
     )
     short_chosen_users = np.random.choice(short_users, 60000, replace=False)
-    long_chosen_users = np.random.choice(long_users, 60000, replace=False)
+    long_chosen_users = np.random.choice(long_users, 50000, replace=False)
     chosen_users = np.concatenate([short_chosen_users, long_chosen_users])
 
     behavior = behavior[behavior.user.isin(chosen_users)]
