@@ -1,5 +1,10 @@
+import os
+import sys
+sys.path.append(os.pardir)
+sys.path.insert(1,'/kaggle/working/EcommAI')
 import numpy as np
 from sklearn.metrics import roc_auc_score
+from dbrl.utils import init_param_dssm
 import torch
 from tqdm import tqdm
 
@@ -12,9 +17,16 @@ def pretrain_model(
         criterion,
         criterion_type,
         optimizer,
-        device
+        device, pretrain
 ):
-
+    if pretrain == 1:
+        checkpoint = torch.load('model_dssm.pt')
+        model.load_state_dict(checkpoint['model_state_dict'])
+        max_roc = checkpoint['eval_roc']
+        print('Load pretrain successful')
+    else:
+      max_roc = 0
+      init_param_dssm(model)
     for epoch in range(1, n_epochs + 1):
         model.train()
         train_loss = []
@@ -31,13 +43,7 @@ def pretrain_model(
             # torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
             optimizer.step()
             train_loss.append(loss.item())
-        torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': loss}
-        , 'model_dssm.pt')
-
+        
         with torch.no_grad():
             model.eval()
             eval_loss = []
@@ -63,3 +69,14 @@ def pretrain_model(
             f"eval loss: {np.mean(eval_loss):.4f}, "
             f"eval roc: {np.mean(eval_roc):.4f}"
         )
+
+        if np.mean(eval_roc) > max_roc:
+            max_roc = np.mean(eval_roc)
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'eval_roc': max_roc}
+                , 'model_dssm.pt')
+            print("model saved ! epoch {0}".format(epoch))
+

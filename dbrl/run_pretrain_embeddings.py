@@ -132,16 +132,10 @@ if __name__ == "__main__":
         dynamic_feat,
         use_bn=True
     ).to(device)
-    if pretrain == 1:
-        checkpoint = torch.load('model_dssm.pt')
-        model.load_state_dict(checkpoint['model_state_dict'])
-        print('Load pretrain successful')
-    else:
-      init_param_dssm(model)
     optimizer = Adam(model.parameters(), lr=lr)  # weight_decay
 
     pretrain_model(model, train_loader, eval_loader, n_epochs, criterion,
-                   criterion_type, optimizer, device)
+                   criterion_type, optimizer, device, pretrain)
     user_embeddings, item_embeddings = generate_embeddings(
         model, n_users, n_items, feat_map, static_feat, dynamic_feat, device
     )
